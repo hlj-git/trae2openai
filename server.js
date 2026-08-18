@@ -299,13 +299,6 @@ async function handleChat(req, res, cfg, bodyStr) {
         }
       }
       if (finResult) {
-        if (finResult.reasoningContent) {
-          log(`[${reqId}] [回复思维链] (${finResult.reasoningContent.length} 字):\n    ${finResult.reasoningContent.replace(/\n/g, '\n    ')}`);
-        }
-        if (finResult.toolCalls && finResult.toolCalls.length) {
-          log(`[${reqId}] [回复工具调用]: ${finResult.toolCalls.map(tc =>
-            `${tc.function.name}(${tc.function.arguments})`).join(', ')}`);
-        }
         log(`[${reqId}] [回复正文] (${(finResult.content || '').length} 字):\n    ${(finResult.content || '(空)').replace(/\n/g, '\n    ')}`);
         log(`[${reqId}] [完成] finish=${finish} 耗时=${Date.now() - t0}ms 用量=${JSON.stringify(usageOut || {})}`);
       }
@@ -343,13 +336,6 @@ async function handleChat(req, res, cfg, bodyStr) {
       choices: [{ index: 0, message, finish_reason: fin.finishReason }],
       usage: fin.usage || { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 },
     };
-    if (r.reasoningContent) {
-      log(`[${reqId}] [回复思维链] (${r.reasoningContent.length} 字):\n    ${r.reasoningContent.replace(/\n/g, '\n    ')}`);
-    }
-    if (r.toolCalls.length) {
-      log(`[${reqId}] [回复工具调用]: ${r.toolCalls.map(tc =>
-        `${tc.function.name}(${tc.function.arguments})`).join(', ')}`);
-    }
     log(`[${reqId}] [回复正文] (${(r.content || '').length} 字):\n    ${(r.content || '(空)').replace(/\n/g, '\n    ')}`);
     log(`[${reqId}] [完成] finish=${fin.finishReason} 耗时=${Date.now() - t0}ms 用量=${JSON.stringify(out.usage)}`);
     sendJSON(res, 200, out);
