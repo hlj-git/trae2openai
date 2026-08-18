@@ -1,0 +1,38 @@
+# 追加到 DSH 配置文件（Windows: %USERPROFILE%\.dsh\settings.yaml / WSL: ~/.dsh/settings.yaml）
+# 作用：在 DSH 模型选择器中新增 "Trae Work (本机)" 供应商，不影响已有默认模型。
+# 前提：先启动本服务。
+#
+# 【重要】baseURL 按运行环境选择：
+#  - DSH 跑在 Windows：http://127.0.0.1:8787/v1
+#  - DSH 跑在 WSL2：  http://<Windows宿主IP>:8787/v1
+#    宿主 IP 在 WSL 内执行: ip route show default | awk '{print $3}'  （如 172.19.192.1）
+#    服务需以 --host 0.0.0.0 启动（WSL 的 127.0.0.1 不是 Windows，直接用会报 could not reach）
+# 模型 ID 与 Trae 客户端一致（来自实时 get_detail_param 列表）。
+llm-pi-ai:
+  providers:
+    trae-local:
+      displayName: "Trae Work (本机)"
+      api: openai-completions
+      baseURL: http://127.0.0.1:8787/v1   # WSL2 内请改为 http://172.19.192.1:8787/v1 形式
+      apiKey: no-key-needed          # 本服务默认不校验 Key；若启用 --api-key，请改成对应值
+      models:
+        - id: glm-5.3
+          name: "GLM-5.3 (Trae)"
+        - id: glm-5.2
+          name: "GLM-5.2 (Trae)"
+        - id: glm-5
+          name: "GLM-5 (Trae)"
+        - id: DeepSeek-V4-Pro
+          name: "DeepSeek V4 Pro (Trae)"
+        - id: DeepSeek-V4-Flash
+          name: "DeepSeek V4 Flash (Trae)"
+        - id: kimi-k3
+          name: "Kimi K3 (Trae)"
+        - id: kimi-k2.7-code
+          name: "Kimi K2.7 Code (Trae)"
+        - id: minimax-m3
+          name: "MiniMax M3 (Trae)"
+        - id: qwen3.8-max
+          name: "Qwen3.8 Max (Trae)"
+        - id: Doubao-Seed-2.1-Pro
+          name: "Doubao Seed 2.1 Pro (Trae)"

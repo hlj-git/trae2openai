@@ -1,0 +1,18 @@
+{
+  "host": "127.0.0.1",
+  "port": 8787,
+  "api_keys": [],
+  "trae": {
+    "edition": "auto",
+    "base_url": "",
+    "function": "solo_work_lite",
+    "ide_version": "0.2.0",
+    "ide_version_code": "20260815",
+    "default_model": "glm-5.2",
+    "manual_token": "",
+    "manual_user_id": ""
+  },
+  "models_cache_ttl": 300,
+  "request_timeout": 600,
+  "extra_models": []
+}

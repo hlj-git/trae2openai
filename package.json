@@ -1,0 +1,14 @@
+{
+  "name": "trae2openai",
+  "version": "1.0.0",
+  "description": "Expose local Trae Work (TRAE SOLO) as an OpenAI-compatible API: streaming, reasoning_content, tool_calls, reasoning_effort, live model list",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test-e2e.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}
