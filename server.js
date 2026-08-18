@@ -233,13 +233,14 @@ async function handleChat(req, res, cfg, bodyStr) {
   const includeUsage = !!(body.stream_options && body.stream_options.include_usage);
   const reqId = 'req-' + crypto.randomUUID().slice(0, 8);
   const t0 = Date.now();
-  const toolNames = (Array.isArray(body.tools) ? body.tools : [])
-    .map(t => t.function && t.function.name).filter(Boolean).join(', ');
   log(`[${reqId}] ===== 对话请求 (${stream ? '流式' : '非流式'}) =====`);
   log(`[${reqId}] [参数] model=${body.model} reasoning_effort=${normalizeEffort(body) || '默认'} ` +
     `max_tokens=${body.max_tokens ?? '-'} temperature=${body.temperature ?? '-'} top_p=${body.top_p ?? '-'} ` +
-    `tool_choice=${JSON.stringify(body.tool_choice ?? '-')} tools=${toolNames ? `[${toolNames}]` : '无'}`);
-  log(`[${reqId}] [输入对话] ${(body.messages || []).length} 条:\n${fmtMessagesForLog(body.messages)}`);
+    `tool_choice=${JSON.stringify(body.tool_choice ?? '-')}`);
+  // 只记录本次提问（最后一条 user 消息），不落盘历史上下文
+  const msgs = body.messages || [];
+  const lastQuestion = [...msgs].reverse().find(m => m.role === 'user');
+  log(`[${reqId}] [本次提问]: ${lastQuestion ? fmtMessagesForLog([lastQuestion]).trim() : '(无 user 消息)'}`);
 
   const auth = await authManager.get();
   const traeCfg = { ...cfg.trae, __base: authManager.regionBase() };

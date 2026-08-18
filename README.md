@@ -54,20 +54,19 @@ node server.js --host 0.0.0.0 --api-key sk-mine
 log/trae2openai-20260818-235029.log
 ```
 
-每个对话请求只记录问答本身与关键参数（不含思维链/工具调用细节，保持日志精简）：
+每个对话请求只记录**单次问答**与关键参数（不含历史上下文、思维链、工具调用细节，保持日志精简）：
 
 ```
-2026-08-18 16:03:21 [req-506fc2db] ===== 对话请求 (非流式) =====
-2026-08-18 16:03:21 [req-506fc2db] [参数] model=deepseek-R1 reasoning_effort=默认 max_tokens=- temperature=- tools=无
-2026-08-18 16:03:21 [req-506fc2db] [输入对话] 1 条:
-    user: 9.11和9.8哪个大？只答答案
-2026-08-18 16:03:21 [req-506fc2db] [上游] resolved_model=deepseek-R1 function=solo_work_lite region_base=https://...
-2026-08-18 16:03:28 [req-506fc2db] [回复正文] (4 字):
-    9.8大
-2026-08-18 16:03:28 [req-506fc2db] [完成] finish=stop 耗时=6623ms 用量={"prompt_tokens":60,...}
+2026-08-18 16:12:11 [req-743c94ce] ===== 对话请求 (非流式) =====
+2026-08-18 16:12:11 [req-743c94ce] [参数] model=glm-5.2 reasoning_effort=默认 max_tokens=- temperature=- top_p=- tool_choice="-"
+2026-08-18 16:12:11 [req-743c94ce] [本次提问]: user: 我叫什么名字？多大？
+2026-08-18 16:12:11 [req-743c94ce] [上游] resolved_model=glm-5.2 function=solo_work_lite region_base=https://...
+2026-08-18 16:12:13 [req-743c94ce] [回复正文] (11 字):
+    你叫小明，今年25岁。
+2026-08-18 16:12:13 [req-743c94ce] [完成] finish=stop 耗时=1980ms 用量={"prompt_tokens":69,...}
 ```
 
-记录项：请求参数（模型/effort/采样/工具名）、完整输入对话（system/user/assistant/tool 消息）、上游实际模型与通道、回复正文、token 用量、耗时、失败原因（上游错误/凭证续期重试）。思维链与工具调用过程不落盘（`finish=tool_calls` 时仅在完成行体现）。`GET /v1/models` 等简单请求记录单行访问日志（含来源 IP）。
+记录项：请求参数（模型/effort/采样）、本次提问（最后一条 user 消息）、上游实际模型与通道、回复正文、token 用量、耗时、失败原因（上游错误/凭证续期重试）。历史上下文（system/历史轮次/tool 消息）、思维链、工具列表与工具调用过程均不落盘（`finish=tool_calls` 时仅在完成行体现）。`GET /v1/models` 等简单请求记录单行访问日志（含来源 IP）。
 
 看到以下输出即成功（凭证自动探测 + 模型列表实时拉取）：
 
